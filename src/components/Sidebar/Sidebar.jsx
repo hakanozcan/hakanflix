@@ -16,10 +16,12 @@ const categories = [
 ];
 
 function Sidebar({ setMobileOpen }) {
+  const { genreIdOrCategoryName } = useSelector((state) => state.currentGenreOrCategory);
   const theme = useTheme();
   const classes = useStyles();
   const { data, isFetching } = useGetGenresQuery();
   const dispatch = useDispatch();
+
   return (
     <>
       <Link to="/" className={classes.imageLink}>
