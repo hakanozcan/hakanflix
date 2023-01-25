@@ -68,7 +68,7 @@ function Actors() {
           *TMDB API üzerinde Türkçe biyografilerin bir kısmı bulunmamaktadır. Bu nedenle biyografiler İngilizce olarak düzenlenmiştir.
         </Typography>
       </Grid>
-       </Grid>
+    </Grid>
       <Box margin="2rem 0">
         <Typography variant="h2" gutterBottom align="center">
           Filmografi

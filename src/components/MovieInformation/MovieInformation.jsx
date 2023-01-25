@@ -56,7 +56,7 @@ function MovieInformation() {
             </Typography>
           </Box>
           <Typography variant="h6" gutterBottom align="center">
-            {data?.runtime} dakika  {data?.spoken_languages.length > 0 ? `/ ${data?.spoken_languages[0].english_name}` : ''}
+            {data?.runtime} dakika / {data?.spoken_languages[0].english_name}
           </Typography>
         </Grid>
         <Grid item className={classes.genresContainer}>
@@ -79,7 +79,7 @@ function MovieInformation() {
           Oyuncular
         </Typography>
         <Grid item container spacing={2}>
-          {data && data.credits.cast.map((character, i) => (
+          {data && data.credits?.cast?.map((character, i) => (
             character.profile_path && (
             <Grid key={i} item xs={4} md={2} component={Link} to={`/actors/${character.id}`} style={{ textDecoration: 'none' }}>
               <img className={classes.castImage} src={`https://image.tmdb.org/t/p/w500${character.profile_path}`} alt={character.name} />
@@ -124,13 +124,13 @@ function MovieInformation() {
       </Box>
 
       <Modal closeAfterTransition className={classes.modal} open={open} onClose={() => setOpen(false)}>
-        {data.videos?.results?.length > 0 && (
+        {data.videos?.results?.length >= 0 && (
         <iframe
           autoPlay
           className={classes.video}
           frameBorder="0"
           title="Fragman"
-          src={`https://www.youtube.com/embed/${data.videos.results[0].key}`}
+          src={`https://www.youtube.com/embed/${data.videos?.results[0].key}`}
           allow="autoplay"
         />
         )}
