@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/hakanflix/static/css/main.3b7c65f2.css",
-    "main.js": "/hakanflix/static/js/main.2acefcb9.js",
+    "main.js": "/hakanflix/static/js/main.d1bebf44.js",
     "index.html": "/hakanflix/index.html",
     "main.3b7c65f2.css.map": "/hakanflix/static/css/main.3b7c65f2.css.map",
-    "main.2acefcb9.js.map": "/hakanflix/static/js/main.2acefcb9.js.map"
+    "main.d1bebf44.js.map": "/hakanflix/static/js/main.d1bebf44.js.map"
   },
   "entrypoints": [
     "static/css/main.3b7c65f2.css",
-    "static/js/main.2acefcb9.js"
+    "static/js/main.d1bebf44.js"
   ]
 }
