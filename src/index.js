@@ -1,21 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Provider } from 'react-redux';
+
 import App from './components/App';
 import store from './app/store';
-import './index.css';
-
-const theme = createTheme({});
+import './index.css'
+import ToggleColorModeProvider from './utils/ToggleColorMode';
 
 ReactDOM.render(
   <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
+    <ToggleColorModeProvider>
+      <BrowserRouter basename="/hakanflix">
         <App />
       </BrowserRouter>
-    </ThemeProvider>
+    </ToggleColorModeProvider>
   </Provider>,
   document.getElementById('root'),
 );

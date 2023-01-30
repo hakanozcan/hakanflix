@@ -12,15 +12,15 @@ export default makeStyles((theme) => ({
       display: 'flex',
       flexDirection: 'column',
     },
-    '&:hover': {
+    '&:hover':{
       cursor: 'pointer',
     },
   },
-  image: {
+  image:{
     borderRadius: '20px',
     height: '300px',
     marginBottom: '10px',
-    '&:hover': {
+    '&:hover':{
       transform: 'scale(1.05)',
     },
   },

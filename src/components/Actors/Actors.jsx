@@ -2,82 +2,66 @@ import React, { useState } from 'react';
 import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import { useHistory, useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
-import { useGetActorsDetailsQuery, useGetMoviesByActorIdQuery } from '../../services/TMDB';
+import MovieIcon from '@mui/icons-material/Movie';
 import useStyles from './styles';
+import { useGetActorDetailQuery, useGetMoviesByActorIdQuery } from '../../services/TMDB';
 import { MovieList, Pagination } from '..';
 
-function Actors() {
-  const { id } = useParams();
-  const history = useHistory();
+const Actors = () => {
   const classes = useStyles();
+  const { id } = useParams();
   const [page, setPage] = useState(1);
-  const { data, isFetching, error } = useGetActorsDetailsQuery(id);
-  const { data: movies } = useGetMoviesByActorIdQuery({ id, page });
+  const { data, isFetching, error } = useGetActorDetailQuery(id);
+  const { data: actorMovies, isFetching: isActorsMovieFetching } = useGetMoviesByActorIdQuery({ id, page });
+  const history = useHistory();
 
-  if (isFetching) {
+  if (isFetching || isActorsMovieFetching) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center">
         <CircularProgress size="8rem" />
       </Box>
     );
+  }
 
-    if (error) {
-      return (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Button startIcon={<ArrowBack />} onClick={() => history.goBack()} color="primary">
-            Geri Dön
-          </Button>
-        </Box>
-      );
-    }
+  if (error) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <Button startIcon={<ArrowBack />} onClick={() => history.goBack()} color="primary">Go Back</Button>
+      </Box>
+    );
   }
 
   return (
-    <> <Grid container spacing={3}>
-      <Grid item lg={5} xl={4}>
-        <img className={classes.image} src={`https://image.tmdb.org/t/p/w780/${data?.profile_path}`} alt={data.name} />
-      </Grid>
-      <Grid item lg={7} xl={8} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-        <Typography variant="h2" gutterBottom>
-          {data?.name}
-        </Typography>
-        <Typography variant="h5" gutterBottom>
-          Doğum Tarihi: {new Date(data?.birthday).toLocaleDateString()}
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          {data?.biography || 'Biyografi bulunamadı.'}
-        </Typography>
+    <>
+      <Grid container spacing={3}>
+        <Grid item lg={5} xl={4}>
+          <img
+            className={classes.image}
+            src={`https://image.tmdb.org/t/p/w780/${data?.profile_path}`}
+            alt={data.name}
+          />
+        </Grid>
+        <Grid item lg={7} xl={8} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+          <Typography variant="h2" gutterBottom>{data?.name}</Typography>
+          <Typography variant="h5" gutterBottom>Born: {new Date(data?.birthday).toDateString()}</Typography>
+          <Typography variant="body1" align="justify" paragraph>{data?.biography || 'Sorry, no biography found...'}</Typography>
+          <Box marginTop="2rem" display="flex" justifyContent="space-around">
+            <Button variant="contained" startIcon={<MovieIcon/>} color="primary" target="_blank" href={`https://www.imdb.com/name/${data?.imdb_id}`}>IMDB</Button>
+            <Button startIcon={<ArrowBack />} onClick={() => history.goBack()} color="primary">Back</Button>
+          </Box>
+        </Grid>
 
-        <Box marginTop="2rem" marginBottom="2rem" display="flex" justifyContent="space-around">
-          <Button variant="contained" color="primary" target="_blank" href={`https://www.imdb.com/name/${data?.imdb_id}`}>
-            IMDB
-          </Button>
-          <Button startIcon={<ArrowBack />} onClick={() => history.goBack()} color="primary">
-            Geri
-          </Button>
-        </Box>
-
-        <Typography variant="caption">
-          *TMDB API üzerinde Türkçe biyografilerin bir kısmı bulunmamaktadır. Bu nedenle biyografiler İngilizce olarak düzenlenmiştir.
-        </Typography>
       </Grid>
-    </Grid>
-      <Box margin="2rem 0">
-        <Typography variant="h2" gutterBottom align="center">
-          Filmografi
-        </Typography>
-        {movies && <MovieList movies={movies} numberOfMovies={12} />}
-        <Pagination currentPage={page} setPage={setPage} totalPages={movies?.total_pages} />
+      <Box margin="2rem" width="100%">
+        <Typography variant="h2" align="center" gutterBottom>Movies</Typography>
+        {actorMovies
+          ? <MovieList movies={actorMovies} numberOfMovies={12} />
+          : <Box>Sorry, nothing is found.</Box>
+        }
+        <Pagination currentPage={page} setPage={setPage} totalPages={actorMovies?.total_pages} />
       </Box>
     </>
   );
-}
+};
 
 export default Actors;

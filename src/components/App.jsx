@@ -1,28 +1,29 @@
 import React from 'react';
 import { CssBaseline } from '@mui/material';
-import { Switch, Route } from 'react-router-dom';
-import { Actors, MovieInformation, Movies, Profile, NavBar } from './index';
-import useStyles from './styles';
+import { Route, Switch } from 'react-router-dom';
 
-const app = () => {
+import useStyles from './styles';
+import { Actors, MovieInformation, Movies, Navbar, Profile } from '.';
+
+const App = () => {
   const classes = useStyles();
+
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <NavBar />
+      <Navbar />
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Switch>
-          <Route exact path="/actors/:id">
-            <Actors />
+          <Route exact path={["/", "/approved"]}>
+            <Movies />
           </Route>
           <Route exact path="/movie/:id">
             <MovieInformation />
           </Route>
-          <Route exact path={['/', '/approved']}>
-            <Movies />
+          <Route exact path="/actor/:id">
+            <Actors />
           </Route>
-
           <Route exact path="/profile/:id">
             <Profile />
           </Route>
@@ -32,4 +33,4 @@ const app = () => {
   );
 };
 
-export default app;
+export default App;

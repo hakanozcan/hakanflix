@@ -11,7 +11,7 @@ module.exports = {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 'latest',
+    ecmaVersion: '12',
     sourceType: 'module',
   },
   plugins: [
@@ -19,7 +19,7 @@ module.exports = {
   ],
   rules: {
     'react/react-in-jsx-scope': 0,
-    'arrow-body-style': 0,
+    "arrow-body-style": 0,
     'import/extensions': 0,
     'react/prop-types': 0,
     'linebreak-style': 0,

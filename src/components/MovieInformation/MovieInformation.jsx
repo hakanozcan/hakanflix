@@ -12,7 +12,7 @@ import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 import { MovieList } from '..';
 import { userSelector } from '../../features/auth';
 
-function MovieInformation() {
+const MovieInformation = () => {
   const classes = useStyles();
   const { id } = useParams();
   const { user } = useSelector(userSelector);
@@ -25,14 +25,15 @@ function MovieInformation() {
 
   const [isMovieFavorited, setIsMovieFavorited] = useState(false);
   const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
+  
 
   useEffect(() => {
-    setIsMovieFavorited(!!favoriteMovies?.results?.find((movie) => movie?.id === data?.id));
-  }, [favoriteMovies, data]);
-
+    setIsMovieFavorited(!!favoriteMovies?.results?.find((movie) => movie?.id === data?.id))
+  },[favoriteMovies, data])
+  
   useEffect(() => {
-    setIsMovieWatchlisted(!!watchlistMovies?.results?.find((movie) => movie?.id === data?.id));
-  }, [watchlistMovies, data]);
+    setIsMovieWatchlisted(!!watchlistMovies?.results?.find((movie) => movie?.id === data?.id))
+  },[watchlistMovies, data])
 
   const addToFavorites = async () => {
     await axios.post(`https://api.themoviedb.org/3/account/${user.id}/favorite?api_key=${process.env.REACT_APP_TMDB_KEY}&session_id=${localStorage.getItem('session_id')}`, {
@@ -50,7 +51,7 @@ function MovieInformation() {
       watchlist: !isMovieWatchlisted,
     });
     setIsMovieWatchlisted((prev) => !prev);
-  };
+  }
 
   if (isFetching || isRecommendationsFetching) {
     return (
@@ -63,10 +64,11 @@ function MovieInformation() {
   if (error) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center">
-        <Link to="/">Bir şeyler ters gitti! - Geri Dön</Link>
+        <Link to="/">Something went wrong! - Go back to Home</Link>
       </Box>
     );
   }
+
 
   return (
     <Grid container className={classes.containerSpaceAround}>
@@ -82,10 +84,10 @@ function MovieInformation() {
         <Typography variant="h5" align="center" gutterBottom>{data?.tagline}</Typography>
         <Grid container className={classes.containerSpaceAround}>
           <Box display="flex" align="center">
-            <Rating readOnly value={data.vote_average / 2} />
-            <Typography variant="subtitle1" gutterBottom style={{ marginLeft: '10px' }}>{data?.vote_average}/10 </Typography>
+            <Rating readOnly value={data.vote_average / 2}></Rating>
+            <Typography variant="subtitle1" gutterBottom style={{ marginLeft: '10px' }}>{data?.vote_average.toFixed(1)}/10 </Typography>
           </Box>
-          <Typography variant="h6" align="center" gutterBottom>{data?.runtime} dakika / {data?.spoken_languages[0].name}</Typography>
+          <Typography variant="h6" align="center" gutterBottom>{data?.runtime} min | Language: {data?.spoken_languages[0].name}</Typography>
         </Grid>
         <Grid item className={classes.genreContainer}>
           {data?.genres?.map((genre, i) => (
@@ -95,9 +97,9 @@ function MovieInformation() {
             </Link>
           ))}
         </Grid>
-        <Typography variant="h5" gutterBottom style={{ marginTop: '10px' }}>Genel Bakış</Typography>
+        <Typography variant="h5" gutterBottom style={{ marginTop: '10px' }}>Overview</Typography>
         <Typography style={{ marginBottom: '2rem' }}>{data?.overview}</Typography>
-        <Typography variant="h5" gutterBottom>Oyuncular</Typography>
+        <Typography variant="h5" gutterBottom>Top Cast</Typography>
         <Grid item container spacing={2}>
           {data && data.credits.cast.map((character, i) => (
             character.profile_path && (
@@ -113,17 +115,17 @@ function MovieInformation() {
           <div className={classes.buttonsContainer}>
             <Grid item xs={12} sm={6} className={classes.buttonsContainer}>
               <ButtonGroup size="medium" variant="outlined">
-                <Button target="_blank" rel="noopener noreferrer" href={data?.homepage} endIcon={<Language />}>Web</Button>
+                <Button target="_blank" rel="noopener noreferrer" href={data?.homepage} endIcon={<Language />}>Website</Button>
                 <Button target="_blank" rel="noopener noreferrer" href={`https://www.imdb.com/title/${data.imdb_id}`} endIcon={<MovieIcon />}>IMDB</Button>
-                <Button onClick={() => setOpen(true)} href="#" endIcon={<Theaters />}>Fragman</Button>
+                <Button onClick={() => setOpen(true)} href="#" endIcon={<Theaters />}>Trailer</Button>
               </ButtonGroup>
             </Grid>
             <Grid item xs={12} sm={6} className={classes.buttonsContainer}>
               <ButtonGroup size="medium" variant="outlined">
-                <Button onClick={addToFavorites} endIcon={isMovieFavorited ? <FavoriteBorderOutlined /> : <Favorite />}>{isMovieFavorited ? 'Favorilerden Çıkar' : 'Favorilere Ekle'}</Button>
-                <Button onClick={addToWatchlist} endIcon={isMovieWatchlisted ? <Remove /> : <PlusOne />}>{isMovieWatchlisted ? 'Listeden Çıkar' : 'Listeye Ekle'}</Button>
+                <Button onClick={addToFavorites} endIcon={isMovieFavorited ? <FavoriteBorderOutlined /> : <Favorite />} >{isMovieFavorited ? 'Unfavorite' : 'Favorite'}</Button>
+                <Button onClick={addToWatchlist} endIcon={isMovieWatchlisted ? <Remove /> : <PlusOne />} >{isMovieWatchlisted ? 'Remove' : 'Watchlist'}</Button>
                 <Button endIcon={<ArrowBack />} sx={{ borderColor: 'primary.main' }}>
-                  <Typography component={Link} to="/" color="inherit" variant="subtitle2" style={{ textDecoration: 'none' }}>Geri</Typography>
+                  <Typography component={Link} to="/" color="inherit" variant="subtitle2" style={{ textDecoration: 'none' }}>Back</Typography>
                 </Button>
               </ButtonGroup>
             </Grid>
@@ -131,12 +133,13 @@ function MovieInformation() {
         </Grid>
       </Grid>
       <Box marginTop="5rem" width="100%">
-        <Typography variant="h3" align="center" gutterBottom>Bunları da beğenebilirsiniz</Typography>
+        <Typography variant="h3" align="center" gutterBottom>You might also like</Typography>
         {recommendations
           ? <MovieList movies={recommendations} numberOfMovies={12} />
-          : <Box>Bu film için öneri bulunamadı </Box>}
+          : <Box>Sorry, nothing is found.</Box>
+        }
       </Box>
-      {/* {console.log(data.videos.results[0].key)} */}
+      
       <Modal
         closeAfterTransition
         className={classes.modal}
@@ -156,6 +159,6 @@ function MovieInformation() {
       </Modal>
     </Grid>
   );
-}
+};
 
 export default MovieInformation;
